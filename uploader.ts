@@ -51,7 +51,7 @@ async function uploadToAPI(
   };
 
   // Handle local server auth
-  if (server.host === "localhost" || server.host === "127.0.0.1") {
+  if (server.host === "rhea" || server.host === "127.0.0.1") {
     if (!server.username || !server.password) {
       throw new Error("Local server requires username and password");
     }
