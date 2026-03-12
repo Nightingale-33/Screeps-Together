@@ -1,0 +1,9 @@
+export function loop() {
+  // Your Screeps code here
+  console.log(`Current game tick is ${Game.time}`);
+
+  for (const name in Game.creeps) {
+    const creep = Game.creeps[name];
+    
+  }
+}
