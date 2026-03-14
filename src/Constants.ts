@@ -1,0 +1,1 @@
+export const ENERGY_BITCH_ROLE = "EnergyBitch";
