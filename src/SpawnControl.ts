@@ -71,10 +71,11 @@ function SpawnCreep(spawn : StructureSpawn, bodyToSpawn: BodyPartConstant[], mem
     let creepName : string = "";
     while(!randomFirstName || !randomLastName || Game.creeps[creepName])
     {
-        randomFirstName = firstNames[Math.random() * firstNames.length];
-        randomLastName = lastNames[Math.random() * lastNames.length];
+        randomFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+        randomLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
 
         creepName = `${randomFirstName}_${randomLastName}`;
+        console.log(`Trying name: ${creepName} which has a creep: ${JSON.stringify(Game.creeps[creepName])}`);
     }
     
     let result = spawn.spawnCreep(bodyToSpawn,creepName, {

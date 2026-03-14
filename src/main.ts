@@ -1,3 +1,4 @@
+import { roleEnergyBitch } from "./EnergyBitch";
 import { ManageSpawns } from "./SpawnControl";
 
 export function loop() {
@@ -13,7 +14,7 @@ export function loop() {
     const creep = Game.creeps[name];
     if(creep?.memory.role === "EnergyBitch")
     {
-
+      roleEnergyBitch.run(creep);
     }
 
   }
