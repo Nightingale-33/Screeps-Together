@@ -1,5 +1,4 @@
 import * as _ from "lodash";
-import { ENERGY_BITCH_ROLE } from "./Constants";
 
 let firstNames : string[] = require("./utils/first-names.json");
 let lastNames : string[] = require("./utils/names.json");
@@ -12,46 +11,58 @@ export function ManageSpawns() {
         {
             let thisRoomsCreeps = _.filter(Game.creeps,(creep) => creep.memory.home === roomName);
             
-            let workerWorkCount = _.sum(thisRoomsCreeps.filter((creep) => creep.memory.role === ENERGY_BITCH_ROLE), (creep) => creep.body.filter(bp => bp.type === WORK).length);
+            let workerWorkCount = _.sum(thisRoomsCreeps.filter((creep) => creep.memory.role === ROLE_ENERGY_BITCH), (creep) => creep.body.filter(bp => bp.type === WORK).length);
 
             let sources = room.find(FIND_SOURCES);
 
             //It takes 10 Work parts, 300 ticks to deplete a source
             if(workerWorkCount < sources.length * 10)
             {
-                let spawns = room.find(FIND_MY_SPAWNS);
-                let minEnergy = spawns.length * SPAWN_ENERGY_CAPACITY; 
+                DoSpawnLogic(ROLE_ENERGY_BITCH,room,roomName,workerWorkCount > 0);
+            }
 
-                let spawnToUse = spawns.find((spawn) => spawn.isActive() && !spawn.spawning);
-                if(!spawnToUse)
-                {
-                    continue;
-                }
-                
-                //If the spawns aren't full, don't bother
-                if(room.energyAvailable < minEnergy)
-                {
-                    continue;
-                }    
+            let constructionSites = room.find(FIND_MY_CONSTRUCTION_SITES);
 
-                //We could wait a bit
-                if(workerWorkCount > 0 && room.energyAvailable < room.energyCapacityAvailable)
-                {
-                    continue;
-                }
-
-                const baseBody = [WORK,CARRY,MOVE];
-                const bodyAddon = [WORK,CARRY];
-
-                let largestBody = GetLargestBody(spawnToUse, baseBody, bodyAddon);
-                if (largestBody.length == 0) {
-                    return null;
-                }
-                return SpawnCreep(spawnToUse, largestBody, {role: ENERGY_BITCH_ROLE, home: roomName});
+            if(constructionSites.length > 0 && thisRoomsCreeps.filter((creep) => creep.memory.role === ROLE_BOB_THE_BUILDER).length < Math.ceil(constructionSites.length / 10))
+            {
+                DoSpawnLogic(ROLE_BOB_THE_BUILDER,room,roomName,workerWorkCount > 0);
             }
         }
         //Else not our room to worry about
     }
+}
+
+function DoSpawnLogic(role : ROLE, room : Room, roomName : string, roomFunctioning : boolean)
+{
+    let spawns = room.find(FIND_MY_SPAWNS);
+    let minEnergy = spawns.length * SPAWN_ENERGY_CAPACITY; 
+
+    let spawnToUse = spawns.find((spawn) => spawn.isActive() && !spawn.spawning);
+    if(!spawnToUse)
+    {
+        return;
+    }
+    
+    //If the spawns aren't full, don't bother
+    if(room.energyAvailable < minEnergy)
+    {
+        return;
+    }    
+
+    //We could wait a bit
+    if(roomFunctioning && room.energyAvailable < room.energyCapacityAvailable)
+    {
+        return;
+    }
+
+    const baseBody = [WORK,CARRY,MOVE];
+    const bodyAddon = [WORK,CARRY];
+
+    let largestBody = GetLargestBody(spawnToUse, baseBody, bodyAddon);
+    if (largestBody.length == 0) {
+        return null;
+    }
+    return SpawnCreep(spawnToUse, largestBody, {role: role, home: roomName, action: ACTION_NONE});
 }
 
 function SpawnCreep(spawn : StructureSpawn, bodyToSpawn: BodyPartConstant[], memory: CreepMemory) : string | null

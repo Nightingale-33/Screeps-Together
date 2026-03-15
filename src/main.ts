@@ -13,11 +13,13 @@ export function loop() {
 
   for (const name in Game.creeps) {
     const creep = Game.creeps[name];
-    if(creep?.memory.role === "EnergyBitch")
+    if(creep?.memory.role === ROLE_ENERGY_BITCH)
     {
       roleEnergyBitch.run(creep);
     }
-    else if (creep?.memory.role === 'BobTheBuilder')
-    {roleBobTheBuilder.run(creep);}
+    else if (creep?.memory.role === ROLE_BOB_THE_BUILDER)
+    {
+      roleBobTheBuilder.run(creep);
+    }
   }
 }

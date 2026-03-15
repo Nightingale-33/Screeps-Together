@@ -1,30 +1,55 @@
-import { BUILD_ACTION } from "./Constants"
-
 export var roleBobTheBuilder = {
     run: function (creep:Creep) {
-        if(creep.memory.action == BUILD_ACTION && creep.store [RESOURCE_ENERGY] ==0) {
-            creep.memory.action = 'harvest';
+        if(creep.memory.action == ACTION_BUILD && creep.store[RESOURCE_ENERGY] == 0) {
+            creep.memory.action = ACTION_HARVEST;
             creep.say ('nom nom🐸')
         }
-        if(creep.memory.action != BUILD_ACTION && creep.store.getFreeCapacity () ==0) {
-            creep.memory.action =  BUILD_ACTION;
+        if(creep.memory.action != ACTION_BUILD && creep.store.getFreeCapacity () == 0) {
+            creep.memory.action =  ACTION_BUILD;
             creep.say ("🔨");        
         }
         
-        if(creep.memory.action == BUILD_ACTION){
-            var targets = creep.room.find (FIND_CONSTRUCTION_SITES);
-                if(targets[0]) {if(creep.build(targets[0])== ERR_NOT_IN_RANGE){
+
+        if(creep.memory.action == ACTION_BUILD){
+            var targets = creep.room.find (FIND_CONSTRUCTION_SITES)
+                .sort((siteA,siteB) => siteA.progress - siteB.progress);
+
+            if(targets[0]) 
+            {
+                if(creep.build(targets[0])== ERR_NOT_IN_RANGE)
+                {
                     creep.moveTo(targets[0], {visualizePathStyle : {stroke: '#0ed4d4c9'}});
-                } }
-        }
-        else if(creep.memory.action == 'harvest')
-        {
-            var sources = creep.room.find (FIND_SOURCES);
-            if (sources[0]) {
-            if (creep.harvest(sources[0]) == ERR_NOT_IN_RANGE)  {
-                creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+                } 
+            } else
+            {
+                creep.memory.action = ACTION_UPGRADE;
+                creep.say("⚡");
             }
+        }
+        
+        if(creep.memory.action == ACTION_HARVEST)
+        {
+            var sources = creep.room.find (FIND_SOURCES)
+                .sort((sourceA,sourceB) => sourceA.energy - sourceB.energy);
+
+            if (sources[0]) {
+                if (creep.harvest(sources[0]) == ERR_NOT_IN_RANGE)  {
+                    creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+                }
             }   
+        }
+
+        if(creep.memory.action == ACTION_UPGRADE)
+        {
+            var controller = creep.room.controller;
+
+            if(controller)
+            {
+                if(creep.upgradeController(controller) == ERR_NOT_IN_RANGE)
+                {
+                    creep.moveTo(controller,{visualizePathStyle: {stroke: '#59005c'}})
+                }
+            }
         }
     }
 }
