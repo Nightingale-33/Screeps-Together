@@ -1,4 +1,5 @@
 import { roleBobTheBuilder } from "./BobTheBuilder";
+import { ROLE_ENERGY_BITCH, ROLE_BOB_THE_BUILDER } from "./Constants";
 import { roleEnergyBitch } from "./EnergyBitch";
 import { ManageSpawns } from "./SpawnControl";
 

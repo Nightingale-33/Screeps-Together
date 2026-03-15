@@ -1,13 +1,16 @@
+export var x = 0;
+
 declare global {
     interface CreepMemory {
-        role: ROLE,
+        role: string,
         home: string,
-        action: ACTIONS,
+        action: string,
         [key:string]:any
     }
+    function Beep() : void;
 }
 
-export function Beep()
+global.Beep = function()
 {
     for(let creepName in Game.creeps)
     {

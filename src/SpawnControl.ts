@@ -1,4 +1,5 @@
 import * as _ from "lodash";
+import { ROLE_ENERGY_BITCH, ROLE_BOB_THE_BUILDER, ACTION_NONE, ROLE } from "./Constants";
 
 let firstNames : string[] = require("./utils/first-names.json");
 let lastNames : string[] = require("./utils/names.json");

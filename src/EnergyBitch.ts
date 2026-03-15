@@ -1,5 +1,3 @@
-import { ok } from "node:assert";
-
 export var roleEnergyBitch = {
     run: function(creep : Creep) {
         if(creep.store.getFreeCapacity()>0)

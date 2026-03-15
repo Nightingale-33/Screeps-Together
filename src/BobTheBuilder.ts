@@ -1,6 +1,8 @@
+import { ACTION_BUILD, ACTION_HARVEST, ACTION_NONE, ACTION_UPGRADE } from "./Constants";
+
 export var roleBobTheBuilder = {
     run: function (creep:Creep) {
-        if(creep.memory.action == ACTION_BUILD && creep.store[RESOURCE_ENERGY] == 0) {
+        if((creep.memory.action == ACTION_BUILD || creep.memory.action == ACTION_NONE) && creep.store.getUsedCapacity() == 0) {
             creep.memory.action = ACTION_HARVEST;
             creep.say ('nom nom🐸')
         }
@@ -12,7 +14,7 @@ export var roleBobTheBuilder = {
 
         if(creep.memory.action == ACTION_BUILD){
             var targets = creep.room.find (FIND_CONSTRUCTION_SITES)
-                .sort((siteA,siteB) => siteA.progress - siteB.progress);
+                .sort((siteA,siteB) => siteB.progress - siteA.progress);
 
             if(targets[0]) 
             {
@@ -30,7 +32,7 @@ export var roleBobTheBuilder = {
         if(creep.memory.action == ACTION_HARVEST)
         {
             var sources = creep.room.find (FIND_SOURCES)
-                .sort((sourceA,sourceB) => sourceA.energy - sourceB.energy);
+                .sort((sourceA,sourceB) => sourceB.energy - sourceA.energy);
 
             if (sources[0]) {
                 if (creep.harvest(sources[0]) == ERR_NOT_IN_RANGE)  {
