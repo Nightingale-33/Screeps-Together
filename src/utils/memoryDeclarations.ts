@@ -1,10 +1,18 @@
-export const x = "";
-
 declare global {
     interface CreepMemory {
-        role: string,
+        role: ROLE,
         home: string,
-        action: string,
+        action: ACTIONS,
         [key:string]:any
+    }
+}
+
+export function Beep()
+{
+    for(let creepName in Game.creeps)
+    {
+        let creep = Game.creeps[creepName];
+
+        creep?.say("beep");
     }
 }
