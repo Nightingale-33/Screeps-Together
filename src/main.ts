@@ -1,3 +1,4 @@
+import { roleBobTheBuilder } from "./BobTheBuilder";
 import { roleEnergyBitch } from "./EnergyBitch";
 import { ManageSpawns } from "./SpawnControl";
 
@@ -16,6 +17,7 @@ export function loop() {
     {
       roleEnergyBitch.run(creep);
     }
-
+    else if (creep?.memory.role === 'BobTheBuilder')
+    {roleBobTheBuilder.run(creep);}
   }
 }
